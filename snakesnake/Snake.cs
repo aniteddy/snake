@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace snakesnake
 {
+	//змея наследуется от класса фигуры, т.к. в фигуре метод рисование
+	//и проверка удара о стену или о саму себя
 	class Snake : Figure
 	{
 		Direction direction;
@@ -55,6 +57,7 @@ namespace snakesnake
 			return false;
 		}
 
+		//считывание клавиши стрелки
 		public void HandleKey(ConsoleKey key)
 		{
 			if (key == ConsoleKey.LeftArrow)
@@ -67,6 +70,7 @@ namespace snakesnake
 				direction = Direction.UP;
 		}
 
+		//съедение еды
 		public bool Eat(Point food)
 		{
 			Point head = GetNextPoint();
