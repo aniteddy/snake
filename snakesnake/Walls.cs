@@ -24,6 +24,11 @@ namespace snakesnake
 			wallList.Add(rightLine);
 		}
 
+		/// <summary>
+		/// инициализация удара
+		/// </summary>
+		/// <param name="figure"></param>
+		/// <returns></returns>
 		internal bool IsHit(Figure figure)
 		{
 			foreach (var wall in wallList)

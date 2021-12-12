@@ -8,20 +8,22 @@ namespace snakesnake
 	{
 		static void Main(string[] args)
 		{
-           // Console.SetBufferSize(80, 25);
-
+		   //установить размер окна
             Walls walls = new Walls(80, 25);
 			walls.Draw();
 
-			// Отрисовка точек			
+			// Отрисовка точек	(применяется инкапсуляция)
+			// (свойство системы, позволяющее объединить данные и методы, работающие с ними, в классе и скрыть детали реализации от пользователя)		
 			Point p = new Point(4, 5, '*');
 			Snake snake = new Snake(p, 4, Direction.RIGHT);
 			snake.Draw();
 
+			//создание еды
 			FoodCreator foodCreator = new FoodCreator(80, 25, '$');
 			Point food = foodCreator.CreateFood();
 			food.Draw();
 
+			//если змека ударилась о стену или о свой хвост, то игра закончена
 			while (true)
 			{
 				if (walls.IsHit(snake) || snake.IsHitTail())

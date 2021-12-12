@@ -4,6 +4,9 @@ using System.Text;
 
 namespace snakesnake
 {
+	/// <summary>
+	/// класс точка для отрисовки точек
+	/// </summary>
 	class Point
 	{
 		public int x;
@@ -50,6 +53,9 @@ namespace snakesnake
 			return p.x == this.x && p.y == this.y;
 		}
 
+		/// <summary>
+		/// отображение точки на консоли
+		/// </summary>
 		public void Draw()
 		{
 			Console.SetCursorPosition(x, y);
@@ -62,9 +68,9 @@ namespace snakesnake
 			Draw();
 		}
 
-		public override string ToString()
-		{
-			return x + ", " + y + ", " + sym;
-		}
+		//public override string ToString()
+		//{
+		//	return x + ", " + y + ", " + sym;
+		//}
 	}
 }

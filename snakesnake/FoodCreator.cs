@@ -2,6 +2,9 @@
 
 namespace snakesnake
 {
+    /// <summary>
+    /// класс создания еды и её отрисовки
+    /// </summary>
     class FoodCreator
     {
         int mapWidth;

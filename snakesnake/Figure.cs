@@ -9,6 +9,7 @@ namespace snakesnake
     /// </summary>
     class Figure
     {
+        //модификатор доступа, что бы лист был виден у наследников
         protected List<Point> pList;
 
         public void Draw()
@@ -30,6 +31,8 @@ namespace snakesnake
             }
             return false;
         }
+
+        
 
         private bool IsHit(Point point)
         {
