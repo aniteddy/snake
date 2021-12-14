@@ -6,10 +6,22 @@ namespace snakesnake
 {
 	class Program
 	{
+
 		static void Main(string[] args)
 		{
-		   //установить размер окна
-            Walls walls = new Walls(80, 25);
+			//Таймер
+			// Create a Timer object that knows to call our TimerCallback
+			// method once every 2000 milliseconds.
+			Timer t = new Timer(TimerCallback, null, 0, 2000);
+			// Wait for the user to hit <Enter>
+			WriteText("Время: " + Convert.ToString(eatcount), Width, 2);
+
+			//счётчик еды
+			int eatcount = 0;
+			//установить размер окна
+			int Width = 80;
+			int Height = 25;
+            Walls walls = new Walls(Width, Height);
 			walls.Draw();
 
 			// Отрисовка точек	(применяется инкапсуляция)
@@ -19,7 +31,7 @@ namespace snakesnake
 			snake.Draw();
 
 			//создание еды
-			FoodCreator foodCreator = new FoodCreator(80, 25, '$');
+			FoodCreator foodCreator = new FoodCreator(Width, Height, '$');
 			Point food = foodCreator.CreateFood();
 			food.Draw();
 
@@ -34,6 +46,10 @@ namespace snakesnake
 				{
 					food = foodCreator.CreateFood();
 					food.Draw();
+					eatcount++;
+					//Console.SetCursorPosition(Width, 2);
+					WriteText("Счёт: " + Convert.ToString(eatcount), Width, 2);
+					
 				}
 				else
 				{
@@ -41,6 +57,7 @@ namespace snakesnake
 				}
 
 				Thread.Sleep(100);
+				//считывание стрелок, двеижение змеи
 				if (Console.KeyAvailable)
 				{
 					ConsoleKeyInfo key = Console.ReadKey();
@@ -51,6 +68,13 @@ namespace snakesnake
 			Console.ReadLine();
 		}
 
+		private static void TimerCallback(Object o)
+		{
+			// Display the date/time when this method got called.
+			Console.WriteLine("In TimerCallback: " + DateTime.Now);
+			// Force a garbage collection to occur for this demo.
+			GC.Collect();
+		}
 
 		static void WriteGameOver()
 		{

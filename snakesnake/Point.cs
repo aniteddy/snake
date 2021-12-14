@@ -13,7 +13,12 @@ namespace snakesnake
 		public int y;
 		public char sym;
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="sym"></param>
 		public Point(int x, int y, char sym)
 		{
 			this.x = x;
@@ -48,6 +53,7 @@ namespace snakesnake
 			}
 		}
 
+		//проверка пересечения координат, одной точки с другой
 		public bool IsHit(Point p)
 		{
 			return p.x == this.x && p.y == this.y;
