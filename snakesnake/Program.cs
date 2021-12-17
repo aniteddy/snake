@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace snakesnake
@@ -9,13 +13,11 @@ namespace snakesnake
 
 		static void Main(string[] args)
 		{
-			//Таймер
-			// Create a Timer object that knows to call our TimerCallback
-			// method once every 2000 milliseconds.
-			Timer t = new Timer(TimerCallback, null, 0, 2000);
-			// Wait for the user to hit <Enter>
-			WriteText("Время: " + Convert.ToString(eatcount), Width, 2);
-
+			Console.WriteLine("Введите имя пользователя");
+			string UserName = Console.ReadLine();
+			Console.Clear();
+			//Словарь с результатами игроков
+			//Dictionary<string, int> users = new Dictionary<string, int>();
 			//счётчик еды
 			int eatcount = 0;
 			//установить размер окна
@@ -23,6 +25,10 @@ namespace snakesnake
 			int Height = 25;
             Walls walls = new Walls(Width, Height);
 			walls.Draw();
+
+			//Таймер
+			Stopwatch clock = new Stopwatch();
+
 
 			// Отрисовка точек	(применяется инкапсуляция)
 			// (свойство системы, позволяющее объединить данные и методы, работающие с ними, в классе и скрыть детали реализации от пользователя)		
@@ -34,10 +40,14 @@ namespace snakesnake
 			FoodCreator foodCreator = new FoodCreator(Width, Height, '$');
 			Point food = foodCreator.CreateFood();
 			food.Draw();
+			Point secondfood = foodCreator.CreateFood();
+			secondfood.Draw();
 
 			//если змека ударилась о стену или о свой хвост, то игра закончена
 			while (true)
 			{
+				clock.Start();
+
 				if (walls.IsHit(snake) || snake.IsHitTail())
 				{
 					break;
@@ -47,9 +57,14 @@ namespace snakesnake
 					food = foodCreator.CreateFood();
 					food.Draw();
 					eatcount++;
-					//Console.SetCursorPosition(Width, 2);
 					WriteText("Счёт: " + Convert.ToString(eatcount), Width, 2);
-					
+				}
+				if (snake.Eat(secondfood))
+				{
+					secondfood = foodCreator.CreateFood();
+					secondfood.Draw();
+					eatcount++;
+					WriteText("Счёт: " + Convert.ToString(eatcount), Width, 2);
 				}
 				else
 				{
@@ -63,18 +78,22 @@ namespace snakesnake
 					ConsoleKeyInfo key = Console.ReadKey();
 					snake.HandleKey(key.Key);
 				}
+
+				//подсчёт и вывод времени
+				clock.Stop();
+				TimeSpan ts = clock.Elapsed;
+				string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+				WriteText("Время: " + Convert.ToString(elapsedTime), Width, 3);
+				
 			}
+
+			SetNewRecord(UserName, eatcount);
 			WriteGameOver();
+			PrintResult();
 			Console.ReadLine();
 		}
 
-		private static void TimerCallback(Object o)
-		{
-			// Display the date/time when this method got called.
-			Console.WriteLine("In TimerCallback: " + DateTime.Now);
-			// Force a garbage collection to occur for this demo.
-			GC.Collect();
-		}
+		
 
 		static void WriteGameOver()
 		{
@@ -85,7 +104,32 @@ namespace snakesnake
 			WriteText("============================", xOffset, yOffset++);
 			WriteText("И Г Р А    О К О Н Ч Е Н А", xOffset + 1, yOffset++);
 			WriteText("============================", xOffset, yOffset++);
+			
 		}
+
+		static void PrintResult()
+        {
+			int xOffset = 30;
+			int yOffset = 12;
+			string FileName = @"records.txt";
+			List<string> fileContent = File.ReadAllLines(FileName).ToList();
+            int LineCount;
+            if (fileContent.Count > 10)
+			{
+				LineCount = 10;
+            }
+            else
+            {
+				LineCount = fileContent.Count;
+
+			}
+
+			for (int i = 0; i < LineCount; i++)
+			{
+				WriteText(fileContent[i], xOffset, yOffset++);
+			}
+		}
+
 
 		static void WriteText(String text, int xOffset, int yOffset)
 		{
@@ -93,5 +137,44 @@ namespace snakesnake
 			Console.WriteLine(text);
 		}
 
+		/// <summary>
+		/// запись в блокнот рекордов, перезаписывает рекорд 
+		/// если имя совпадает и этот рекорд больше предыдущего
+		/// </summary>
+		/// <param name="UserName"></param>
+		/// <param name="eatcount"></param>
+		static void SetNewRecord(string UserName, int eatcount)
+		{
+			string FileName = @"records.txt";
+			List<string> fileContent = File.ReadAllLines(FileName).ToList();
+			
+			string record;
+			int j=44444;
+			for (int i = 0; i < fileContent.Count; i++)
+			{
+				string num = fileContent[i].Split(' ')[1];
+				if (Convert.ToInt64(num) < eatcount)
+				{
+					j = 44444;
+					record = $"{UserName} {eatcount}";
+					fileContent.Insert(i, record);
+					File.WriteAllLines(FileName, fileContent);
+					break;
+				}
+				else 
+                {
+					j = i+1;
+				}
+
+			}
+
+			if (j != 44444)
+			{
+				record = $"{UserName} {eatcount}";
+				fileContent.Insert(j, record);
+				File.WriteAllLines(FileName, fileContent);
+            }
+			
+		}
 	}
 }
