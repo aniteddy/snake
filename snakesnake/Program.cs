@@ -106,7 +106,9 @@ namespace snakesnake
 			WriteText("============================", xOffset, yOffset++);
 			
 		}
-
+		/// <summary>
+		/// Вывод рейтинга игроков
+		/// </summary>
 		static void PrintResult()
         {
 			int xOffset = 30;
@@ -121,7 +123,6 @@ namespace snakesnake
             else
             {
 				LineCount = fileContent.Count;
-
 			}
 
 			for (int i = 0; i < LineCount; i++)
